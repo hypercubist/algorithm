@@ -1,0 +1,7 @@
+divmod : 몫과 나머지를 동시에 구하는 함수
+divmod(a, b) => return (a//b, a%b)
+
+bin() : 10진수를 2진수로 변환
+int(number, n) : n진수 number를 10진수로 변환
+
+simpy : 소수 관련 라이브러리
