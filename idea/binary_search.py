@@ -14,10 +14,14 @@ def binary_search(array, value):
             right = mid - 1
     return -1 #못찾은 경우
 
-# 재귀함수로 구현, start ~ end 파라미터로 검색 구간을 설정할 수 있음
-def binary_search2(array, value, start, end):
-    if start > end:
+# 재귀함수로 구현, left ~ right 파라미터로 검색 구간을 설정할 수 있음
+def binary_search2(array, value, left, right):
+    if left > right:
         return -1
-
-    mid = (start+end) // 2
-
+    mid = (left + right) // 2
+    if array[mid] == value:
+        return mid
+    elif array[mid] < value:
+        return binary_search2(array, value, mid+1, right)
+    else:
+        return binary_search2(array, value, left, mid-1)
