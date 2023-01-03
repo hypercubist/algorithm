@@ -1,4 +1,6 @@
-#이진검색은 먼저 데이터가 정렬이 되어야 한다.
+#이진탐색은 먼저 데이터가 정렬이 되어야 한다.
+
+# 반복문으로 구현
 def binary_search(array, value):
     left = 0
     right = len(array) - 1
@@ -11,3 +13,11 @@ def binary_search(array, value):
         else:
             right = mid - 1
     return -1 #못찾은 경우
+
+# 재귀함수로 구현, start ~ end 파라미터로 검색 구간을 설정할 수 있음
+def binary_search2(array, value, start, end):
+    if start > end:
+        return -1
+
+    mid = (start+end) // 2
+
