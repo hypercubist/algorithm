@@ -42,6 +42,8 @@ def dijkstra(start):
             if cost < distance[j[0]]: # 기존 최단거리보다 짧은 경우, 최단거리 갱신
                 distance[j[0]] = cost
 
+#개선된 방법
+#가장 짧은 거리를 찾기위해 선형시간이 필요 -> 로그 시간만 사용하는 힙 사용
 
 
 
