@@ -43,7 +43,25 @@ def dijkstra(start):
                 distance[j[0]] = cost
 
 #개선된 방법
-#가장 짧은 거리를 찾기위해 선형시간이 필요 -> 로그 시간만 사용하는 힙 사용
-
+#현재 가장 가까운 노드를 찾기위해 선형시간이 필요 -> 로그 시간만 사용하는 힙 사용
+import heapq
+def dijkstra2(graph, start, distance):
+    # distance : 각 노드의 최단거리를 저장할 배열 distance = [INF] * (n+1)로 초기화 한다.
+    q = []
+    # 힙에 삽입되는 원소가 배열이라면 첫번째 원소를 기준으로 정렬되므로 (거리, 노드)로 정의해서 넣으면 거리를 기준으로 정렬된다.
+    # 시작노드까지의 거리 0으로 초기화
+    heapq.heappush(q, (0, start))
+    distance[start] = 0
+    while q:
+        # 힙에 저장된 노드 중 최단거리가 최소인 노드 pop
+        dist, now = heapq.heappop(q)
+        # 이미 최단거리가 갱신되어 힙에서 꺼낸 거리보다 짧은 경우 -> 패스
+        if distance[now] < dist:
+            continue
+        for i in graph[now]: # now와 인접한 노드들을 확인
+            cost = dist + i[1] # now를 거쳐서 i[0] 노드로 갈때 거리
+            if cost < distance[i[0]]: # 새로 계산된 cost 거리가 기존에 저장된 거리보다 짧은 경우 갱신
+                distance[i[0]] = cost
+                heapq.heappush(q, (cost, i[0])) # 갱신된 최단거리 노드를 힙에 삽입
 
 
