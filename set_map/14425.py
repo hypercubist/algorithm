@@ -9,15 +9,14 @@ for _ in range(n):
 
 for _ in range(m):
     s2.append(input())
-ct1 = Counter(s1)
-ct2 = Counter(s2)
-ct_result = ct2 - ct1 #차집합
+
+ct = Counter(s2)
 
 sum = 0
-for k, v in ct_result.items():
-    sum += v
+for key in s1:
+    sum += ct[key]
 
-print(m-sum)
+print(sum)
 
 
 
