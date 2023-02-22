@@ -10,7 +10,7 @@ y = []
 q = []
 
 for i in range(n):
-    a = input().strip() ## readline으로 입력 받는 경우 개행문자까지 가져오므로 잘라내고 넣어준다.
+    a = input().strip() ## readline으로 입력 받는 경우 개행문자까지 가져오므로 잘라내고 넣어준다.ㅐ
     x[a] = i
     y.append(a)
 
