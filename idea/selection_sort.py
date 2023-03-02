@@ -8,4 +8,4 @@ def selection_sort(array):
             if array[min_idx] > array[j]:
                 min_idx = j
         array[i], array[min_idx] = array[min_idx], array[i] #찾고나서 정렬되  않은 원소 중 가장 앞 쪽 원소와 swap
-    return array
+    return arrayz
