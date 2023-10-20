@@ -42,3 +42,5 @@ def bt(line):
 
 bt(0)
 print(count)
+
+
