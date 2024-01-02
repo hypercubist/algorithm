@@ -1,35 +1,45 @@
-# 좌표, 백트래킹
+# Word Search
 
-def exist(self, board, word):
-    result = False
-    row = len(board)
-    col = len(board[0])
-    dx = [0, 1, 0 , -1]
-    dy = [1, 0, -1, 0]
-    def is_inside(x, y):
-        if 0<=x<row and 0<=y<col:
-            return True
-        else:
+class Solution:
+
+    def exist(self, board, word):
+        dx = [0, 1, 0, -1]
+        dy = [-1, 0, 1, 0]
+        row, col = len(board), len(board[0])
+        vstd = [[False for _ in range(col)] for _ in range(row)]   # 방문한 칸
+
+        word_set = set(word)
+        board_set = set([])
+        for item in board:
+            board_set |= set(item)
+        result_set = word_set - board_set
+
+        if len(result_set) > 0:
             return False
 
-    def bt(x, y, z, flag):
-        memory = board[x][y]
-        board[x][y] = '.'
-        if board[x][y] == word[z]:
-            if z == len(word)-1:
-                result = True
-            else:
-                for k in range(4):
-                    nx = x + dx[k]
-                    ny = y + dy[k]
-                    if is_inside(nx, ny) and board[nx][ny] != '.': #이동
-                        bt(nx, ny, z+1)
-        board[x][y] = memory
-        return
+        def is_available(x, y):
+            return 0 <= x < row and 0 <= y < col
 
-    for i in range(row):
-        for j in range(col):
-            # 선택
-            bt(i, j, 0)
+        def bt(x, y, idx):
+            if not vstd[x][y] and board[x][y] == word[idx]:
+                if idx == len(word)-1:
+                    return True
+                vstd[x][y] = True
+                result = False
+                for z in range(4):
+                    nx = x + dx[z]
+                    ny = y + dy[z]
+                    if is_available(nx, ny):
+                        if bt(nx, ny, idx+1):
+                            result = True
+                vstd[x][y] = False
+                return result
 
-    return result
+        for i in range(row):
+            for j in range(col):
+                if bt(i, j, 0):
+                    return True
+
+        return False
+
+
