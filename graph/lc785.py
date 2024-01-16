@@ -1,30 +1,47 @@
 # Is Graph Bipartite?
 
-# 이분 그래프??
-# 같은 집합 내 연결된 노드가 없어야한다
-# 간선을 따라 이동할 때 마다 집합이 달라져야 한다. (계속해서 다른 집합으로 이동)
+# Bipartite??
+# 그래프의 노드를 집합 A, B로 나누었을 때 그래프의 모든 간선이 집합 A-B를 서로 연결하고 있어야 한다.
+# 집합 내부의 노드는 서로 직접 연결되어 있지 않다.
+# 간선을 따라 계속해서 다른 집합으로 이동하게 되는 것을 의미
+# 다른 노드 V로 이동할 때 해당 노드가 집합 A에 속해야 한다면 집합 A내부의 어떤 노드와도 연결되어 있으면 안된다.
+# 위 조건을 만족하면서 모든 간선을 사용한 경우 Bipartite하다고 할 수 있다.
 
-# dfs, bfs ? 모든 노드를 이어 방문하면서 집합을 선정하고 예상했던 집합이 아닌 케이스를 찾는다.
-
-from collections import deque
 class Solution:
-    def isBipartite(self, graph):
+    def isBipartite(graph):
+        n = len(graph)
+        edges = []
+        set_a = set([])
+        set_b = set([])
 
-        set_list = [-1 for _ in range(len(graph))] # -1(미확인), 0(setA), 1(setB)
+        # edge : x -> y
+        for x in range(n):
+            for y in graph[x]:
 
-        for i, s in enumerate(set_list):
-            # 이렇게 모든 노드에 대해서 출발을 설정하면 이어지지 않은 다른 노드들도 확인할 수 있다.(완전탐색에서 확인하지 못한 노드들)
-            if s == -1:
-                q = deque([i])
-                set_list[i] = 0 #set 0으로 정하기
-                while q:
-                    x = q.popleft() # x -> y
-                    for y in graph[x]:
-                        if set_list[y] == -1: # 아직 다음 노드의 집합이 결정되지 않았으면
-                            set_list[y] = set_list[x] ^ 1 # 출발 노드와 다른 집합에 넣음
-                            q.append(y)
-                        elif set_list[x] == set_list[y]:
-                            return False
+                if i in set_a:
+                    if edge in set_a:
+                        print(i, 1)
+                        return False
+                    set_b.add(edge)
+                elif i in set_b:
+                    if edge in set_b:
+                        print(i, 2)
+                        return False
+                    set_a.add(edge)
+                else:
+                    if edge in set_a:
+                        set_b.add(i)
+                    elif edge in set_b:
+                        set_a.add(i)
+
 
         return True
+
+
+
+
+
+
+
+
 
