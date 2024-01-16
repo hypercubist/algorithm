@@ -1,6 +1,6 @@
 # Shortest Path in Binary Matrix
 
-# bfs?
+# bfs
 # depth 구하기
 
 
@@ -12,8 +12,10 @@ class Solution:
         if grid[0][0] == 1 or grid[n-1][n-1] == 1:
             return -1
 
+        if n == 1 and grid[0][0] == 0:
+            return 1
         def is_inside(x, y):
-            return 0 <= x, y < n and grid[x][y] == 0
+            return 0 <= x < n and 0 <= y < n and grid[x][y] == 0
 
         q = deque([])
         visited = [[False] * n for _ in range(n)]
@@ -21,11 +23,16 @@ class Solution:
         dy = [-1, 0, 1, 0, 1, -1, 1, -1]
 
         visited[0][0] = True
-        q.append((0, 0))
+        q.append((0, 0, 1))
         while q:
-            x, y = q.popleft()
+            x, y, depth = q.popleft()
             for i in range(8):
-                nx = x + dx
-                ny = y + dy
+                nx = x + dx[i]
+                ny = y + dy[i]
+                if nx == n-1 and ny == n-1:
+                    return depth + 1
                 if is_inside(nx, ny) and not visited[nx][ny]:
-                    q.append((nx, ny))
+                    visited[nx][ny] = True
+                    q.append((nx, ny, depth+1))
+
+        return -1
