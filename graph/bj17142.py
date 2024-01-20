@@ -22,7 +22,8 @@ def chk_time(gh): # 전체 감염에 걸린 시간 확인
         for j in range(n):
             if gh[i][j] == 0:
                 return 1e9
-            elif gh[i][j] < 0: # 경과시간은 음수로 기록했으므로 음수에서만 확인
+            # 경과시간은 음수로 기록했으므로 음수에서만 확인, 원래 바이러스가 있던 위치는 depth가 덮어쓰더라도 카운팅하지 않음
+            elif gh[i][j] < 0 and graph[i][j] != 2:
                 max_time = max(max_time, -gh[i][j]) # 음수 -> 양수로 변환
     return max_time
 
@@ -50,7 +51,6 @@ for i in range(n):
 active_virus_combi = combinations(virus, m) # 활성 바이러스 선택 조합
 min_time = 1e9
 for active_virus in active_virus_combi:
-    print(active_virus)
     for v in active_virus:
         graph[v[0]][v[1]] = 3 # 활성 바이러스 놓기(활성바이러스 = 3 표시)
 
