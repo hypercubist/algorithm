@@ -8,87 +8,68 @@ n, m = map(int, input().split())
 gh = []
 for _ in range(n):
     gh.append(input())
-print(gh)
 # R, B, O 위치 확인
-pr = (0, 0)
-pb = (0, 0)
-po = (0, 0)
+
+prx, pry = (0, 0)
+pbx, pby = (0, 0)
 for i in range(n):
     for j in range(m):
         if gh[i][j] == 'R':
-            pr = (i, j)
+            prx, pry = (i, j)
         elif gh[i][j] == 'B':
-            pb = (i, j)
-        elif gh[i][j] == 'O':
-            po = (i, j)
+            pbx, pby = (i, j)
 
 dx = [0, 1, 0, -1]
 dy = [-1, 0, 1, 0]
 def next_coord(x, y, idx):
+    dist = 0
     while True:
+        dist += 1
+        x += dx[idx]
+        y += dy[idx]
+        if gh[x][y] == '#':
+            return x-dx[idx], y-dy[idx], dist-1 # 벽 앞에서 멈추기
+        elif gh[x][y] == 'O':
+            return x, y, dist # 이동 거리도 함께 리턴
 
-        nx = x + dx[idx]
-        ny = y + dy[idx]
-        if gh[nx][ny] == '#':
-            return (x, y)
-        elif gh[nx][ny] == 'O':
-            return (nx, ny)
-        else:
-            x = nx
-            y = ny
+def coord_correction(rx, ry, rd, bx, by, bd, idx): #좌표 보정
+    if rd < bd: # 더 많이 이동한 구슬이 더 늦게 도착한다.
+        bx -= dx[idx]
+        by -= dy[idx]
+    else:
+        rx -= dx[idx]
+        ry -= dy[idx]
+    return rx, ry, bx, by
 
-def coord_correction(coord_r, coord_b, coord_nr, coord_nb): #좌표 보정
-    cor_r = [coord_nr[0], coord_nr[1]]
-    cor_b = [coord_nb[0], coord_nb[1]]
-    if coord_r[0] == coord_b[0]: # row가 같은 경우 -> col비교
-        if coord_r[1] < coord_b[1]:
-            if coord_r[1] < coord_nr[1]:
-                cor_r[1] -= 1
-            else:
-                cor_b[1] += 1
-        else:
-            if coord_r[1] < coord_nr[1]:
-                cor_b[1] -= 1
-            else:
-                cor_r[1] += 1
-    elif coord_r[1] == coord_b[1]: # col이 같은 경우 -> row비교
-        if coord_r[0] < coord_b[0]:
-            if coord_r[0] < coord_nr[0]:
-                cor_r[0] -= 1
-            else:
-                cor_b[0] += 1
-        else:
-            if coord_r[0] < coord_nr[0]:
-                cor_b[0] -= 1
-            else:
-                cor_r[0] += 1
 
-    return cor_r, cor_b
-
-def bfs(start_r, start_b):
-    count = 1e9
-    visited = [(start_r, start_b)]
-    q = deque([(start_r, start_b, 0)])
+def bfs(start_rx, start_ry, start_bx, start_by):
+    result = False
+    visited = [(start_rx, start_ry, start_bx, start_by)]
+    q = deque([(start_rx, start_ry, start_bx, start_by, 0)])
     while q:
-        r, b, c = q.popleft()
-        for i in range(4):
-            nr = next_coord(r[0], r[1], i)
-            nb = next_coord(b[0], b[1], i)
-            if nr == nb == po: # 둘 다 탈출한 경우
+        rx, ry, bx, by, c = q.popleft()
+        if c >= 10: # 카운트(c)가 10과 같아지면 다음 이동의 카운트는 11이므로 모두 실패이다.
+            break
+        for k in range(4):
+            nrx, nry, nrd = next_coord(rx, ry, k)
+            nbx, nby, nbd = next_coord(bx, by, k)
+            if gh[nbx][nby] == 'O': # 어쨌든 파랑이 탈출하면 실패
                 continue
-            elif nr == po:
-                count = min(count, c)
-            elif nb == po:
+            if (nrx, nry, nbx, nby) in visited:
                 continue
-            else:
-                if nr == nb:
-                    nr, nb = coord_correction(r, b, nr, nb)
-                if (nr, nb) not in visited:
-                    visited.append((nr, nb))
-                    q.append((nr, nb, c+1))
-    return count
+            if gh[nrx][nry] == 'O': # 파랑이 탈출하는 케이스를 제외하고 빨강이 탈출하면 성공
+                result = True
+                break
+            if nrx == nbx and nry == nby:
+                nrx, nry, nbx, nby = coord_correction(nrx, nry, nrd, nbx, nby, nbd, k)
+            visited.append((nrx, nry, nbx, nby))
+            q.append((nrx, nry, nbx, nby, c+1))
+        if result:
+            break
+    return result
 
-if bfs(pr, pb) <= 10:
+
+if bfs(prx, pry, pbx, pby):
     print(1)
 else:
     print(0)
