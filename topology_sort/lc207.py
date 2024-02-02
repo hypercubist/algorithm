@@ -1,4 +1,7 @@
 # Course Schedule
+# 진입 차수를 제거하는 방법으로 위상정렬
+# 모두 정렬된 경우 남은 진입 차수가 없어야 한다.
+# 사이클이 발생하는 경우 진입 차수가 남게되므로 정렬할 수 없음을 알 수 있다
 
 from collections import deque
 class Solution:
@@ -23,7 +26,7 @@ class Solution:
                     q.append(v)
 
         for i in indegrees:
-            if i != 0:
+            if i != 0: # 남은 진입 차수가 있으면 사이클 발생
                 return False
 
         return True
