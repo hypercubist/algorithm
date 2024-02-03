@@ -53,7 +53,6 @@ def solution(board):
         return result
 
     def bfs(x1, y1, x2, y2):
-        result = 1e9
         visited = []
         q = deque([(x1, y1, x2, y2, 0)])
         #두 좌표의 앞뒤가 바뀔 수 있으므로 두 케이스 모두 저장
@@ -61,18 +60,15 @@ def solution(board):
         visited.append((x2, y2, x1, y1))
         while q:
             xx1, yy1, xx2, yy2, c = q.popleft()
+            if (xx1 == n-1 and yy1 == n-1) or (xx2 == n-1 and yy2 == n-1):
+                return c
             move_case = possible_move_case(xx1, yy1, xx2, yy2)
             for case in move_case:
                 if case not in visited:
                     xxx1, yyy1, xxx2, yyy2 = case
-                    if (xxx1 == n-1 and yyy1 == n-1) or (xxx2 == n-1 and yyy2 == n-1):
-                        result = min(result, c+1)
-                    else:
-                        q.append((xxx1, yyy1, xxx2, yyy2, c+1))
-                        visited.append((xxx1, yyy1, xxx2, yyy2))
-                        visited.append((xxx2, yyy2, xxx1, yyy1))
-
-        return result
+                    q.append((xxx1, yyy1, xxx2, yyy2, c+1))
+                    visited.append((xxx1, yyy1, xxx2, yyy2))
+                    visited.append((xxx2, yyy2, xxx1, yyy1))
 
     return bfs(0, 0, 0, 1)
 
